@@ -1,8 +1,6 @@
 services:
   app:
-    build:
-      context: .
-      shm_size: '4gb'   # GraalVM native-image needs ~4 GB during compilation
+    build: .
     ports:
       - "8080:8080"
     environment:

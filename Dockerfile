@@ -1,5 +1,5 @@
-# --- Build stage: GraalVM native-image ---
-FROM ghcr.io/graalvm/native-image-community:17 AS build
+# --- Build stage ---
+FROM eclipse-temurin:17-jdk-alpine AS build
 WORKDIR /app
 
 COPY gradlew .
@@ -7,13 +7,13 @@ COPY gradle gradle
 COPY build.gradle.kts settings.gradle.kts ./
 COPY src src
 
-RUN microdnf install -y findutils && chmod +x gradlew && ./gradlew nativeCompile --no-daemon -x test
+RUN chmod +x gradlew && ./gradlew bootJar --no-daemon -x test
 
-# --- Runtime stage: minimal image (~50 MB) ---
-FROM debian:12-slim
+# --- Runtime stage ---
+FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
 
-COPY --from=build /app/build/native/nativeCompile/otp-manager .
+COPY --from=build /app/build/libs/*.jar app.jar
 
 EXPOSE 8080
-ENTRYPOINT ["./otp-manager"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
