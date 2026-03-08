@@ -5,9 +5,9 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.ExampleObject
-import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -45,14 +45,7 @@ class OtpController(private val otpService: OtpService) {
         summary = "Validate a TOTP code",
         description = "Validates a 6-digit TOTP code against the stored secret for the given user.",
         responses = [
-            ApiResponse(
-                responseCode = "200",
-                description = "Validation result",
-                content = [Content(
-                    mediaType = "application/json",
-                    schema = Schema(example = """{"valid":true}""")
-                )]
-            )
+            ApiResponse(responseCode = "200", description = "Validation result — { \"valid\": true/false }")
         ]
     )
     @PostMapping("/validate")
@@ -63,5 +56,22 @@ class OtpController(private val otpService: OtpService) {
         @RequestParam otp: Int
     ): Map<String, Boolean> {
         return mapOf("valid" to otpService.validateOtp(username, otp))
+    }
+
+    @Operation(
+        summary = "Revoke a TOTP secret",
+        description = "Deletes the stored secret for the given user. They will need to generate a new one.",
+        responses = [
+            ApiResponse(responseCode = "204", description = "Secret revoked successfully"),
+            ApiResponse(responseCode = "404", description = "No secret found for user")
+        ]
+    )
+    @DeleteMapping("/secret")
+    fun revokeSecret(
+        @Parameter(description = "User identifier", required = true)
+        @RequestParam username: String
+    ): ResponseEntity<Void> {
+        otpService.revokeSecret(username)
+        return ResponseEntity.noContent().build()
     }
 }

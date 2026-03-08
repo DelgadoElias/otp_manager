@@ -15,7 +15,7 @@ class CorsConfig(
     fun corsFilter(): CorsFilter {
         val config = CorsConfiguration().apply {
             allowedOrigins = this@CorsConfig.allowedOrigins.split(",").map { it.trim() }
-            allowedMethods = listOf("POST", "OPTIONS")
+            allowedMethods = listOf("POST", "DELETE", "OPTIONS")
             allowedHeaders = listOf("*")
         }
         val source = UrlBasedCorsConfigurationSource()

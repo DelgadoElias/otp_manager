@@ -47,6 +47,13 @@ class OtpService(
         return Base64.getEncoder().encodeToString(stream.toByteArray())
     }
 
+    fun revokeSecret(username: String) {
+        if (otpRepository.findByUsername(username) == null) {
+            throw ResponseStatusException(HttpStatus.NOT_FOUND, "No secret found for user")
+        }
+        otpRepository.deleteByUsername(username)
+    }
+
     fun validateOtp(username: String, otp: Int): Boolean {
         val entry = otpRepository.findByUsername(username)
         val isValid = entry != null && gAuth.authorize(entry.secret, otp)
