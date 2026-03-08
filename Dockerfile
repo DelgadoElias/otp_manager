@@ -7,7 +7,7 @@ COPY gradle gradle
 COPY build.gradle.kts settings.gradle.kts ./
 COPY src src
 
-RUN chmod +x gradlew && ./gradlew nativeCompile --no-daemon -x test
+RUN microdnf install -y findutils && chmod +x gradlew && ./gradlew nativeCompile --no-daemon -x test
 
 # --- Runtime stage: minimal image (~50 MB) ---
 FROM debian:12-slim
