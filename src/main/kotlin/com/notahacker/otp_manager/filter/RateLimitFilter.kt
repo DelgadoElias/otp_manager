@@ -29,7 +29,7 @@ class RateLimitFilter(
         val httpRequest = request as HttpServletRequest
         val httpResponse = response as HttpServletResponse
 
-        if (!httpRequest.requestURI.startsWith("/otp")) {
+        if (!httpRequest.requestURI.startsWith("/otp") || httpRequest.method == "OPTIONS") {
             chain.doFilter(request, response)
             return
         }
