@@ -1,0 +1,55 @@
+{
+	"info": {
+		"_postman_id": "be19c6c2-41fb-4030-a69c-c6e9d9df38d2",
+		"name": "OTP Manager",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Generate Secret",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/otp/generate-secret?username=user@example.com",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "8080",
+					"path": ["otp", "generate-secret"],
+					"query": [
+						{
+							"key": "username",
+							"value": "user@example.com"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Validate OTP",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/otp/validate?username=user@example.com&otp=123456",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "8080",
+					"path": ["otp", "validate"],
+					"query": [
+						{
+							"key": "username",
+							"value": "user@example.com"
+						},
+						{
+							"key": "otp",
+							"value": "123456"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
